@@ -1,0 +1,218 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>SFX.js</title>
+	<meta name="description" content="Simple and small JavaScript audio wrapper for easy sound effects on your website.">
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body id="top">
+
+	<div id="header" class="container header">
+
+		<div id="download">
+			<h6>Download Latest</h6>
+			<div class="btn-group">
+				<a href="//github.com/Darsain/sfx.js/raw/master/sfx.js" class="btn btn-large">Development</a>
+				<a href="//github.com/Darsain/sfx.js/raw/master/sfx.min.js" class="btn btn-large">Minified</a>
+			</div>
+		</div>
+
+		<h1>SFX.js</h1>
+		<p>Simple and small JavaScript audio wrapper for easy sound effects on your website</p>
+
+	</div>
+
+	<div id="nav">
+		<div class="container">
+
+			<ul id="tabs" class="clearfix">
+				<li data-activate="examples"><a href="#examples">Examples</a></li>
+				<li data-activate="code"><a href="#code">Code</a></li>
+			</ul>
+
+		</div>
+	</div>
+
+	<div id="sections" class="container">
+
+		<div id="examples">
+
+			<div class="block clearfix">
+				<h3>Simple link hover effects</h3>
+				<div class="controls clearfix">
+					<a href="javascript:void(0)" id="hover">Hover :)</a>
+				</div>
+			</div>
+			<div class="block clearfix">
+				<h3>Weapon fire from 4 audio files</h3>
+				<div class="controls clearfix">
+					<div class="btn-group">
+						<button data-play="shot1" class="btn">Shot1</button>
+						<button data-play="shot2" class="btn">Shot2</button>
+						<button data-play="shot3" class="btn">Shot3</button>
+						<button data-play="shot4" class="btn">Shot4</button>
+					</div>
+					&raquo;
+					<button id="fire" class="btn">Fire !</button>
+				</div>
+			</div>
+			<div class="block clearfix">
+				<h3>Background music</h3>
+				<div class="controls clearfix">
+					<div class="btn-group">
+						<button data-play="music" class="btn">Play</button>
+						<button data-pause="music" class="btn">Pause</button>
+						<button data-stop="music" class="btn">Stop</button>
+					</div>
+					<input type="range" name="volume" data-sound="music" min="0" max="100" step="10" value="50" class="volume">
+					<span class="fright">Music: <a href="http://soundcloud.com/fantomenk/wily">Wily <small>by</small> FantomenK</a></span>
+				</div>
+			</div>
+			<div class="block clearfix">
+				<h3>Looping sound</h3>
+				<div class="controls clearfix">
+					<div class="btn-group note">
+						<button data-play="loop" class="btn">Play</button>
+						<button data-loop="loop" class="btn">Loop</button>
+						<button data-pause="loop" class="btn">Pause</button>
+						<button data-stop="loop" class="btn">Stop</button>
+					</div>
+					<small>Sound is seamless, but the jump between plays is still noticeable in most of the browsers :(</small>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="code">
+<pre class="prettyprint lang-js">
+// Creating global SFX instance
+var sounds = new SFX('sfx');
+
+// Adding sound effects, and setting their default volume and number of sound layers
+sounds.add( 'mouseover', 'fart', 30 );
+sounds.add( 'mouseout', 'fart_out', 50 );
+sounds.add( 'music', 'wily', 50 );
+sounds.add( 'loop', 'fire', 50 );
+sounds.add( 'shot1', 'shot01', 30, 2 );
+sounds.add( 'shot2', 'shot02', 30, 2 );
+sounds.add( 'shot3', 'shot03', 30, 2 );
+sounds.add( 'shot4', 'shot04', 30, 2 );
+sounds.add( 'fire', ['shot01','shot02','shot03','shot04'], 20, 20 );
+
+// Adding with map
+sounds.add({
+	music: 'wily',
+	loop:  'fire',
+	mouseover: [ 'fart', 30 ],
+	mouseout:  [ 'fart_out', 50 ],
+	shot1: [ 'shot01', 30, 2 ],
+	shot2: [ 'shot02', 30, 2 ],
+	shot3: [ 'shot03', 30, 2 ],
+	shot4: [ 'shot04', 30, 2 ],
+	fire:  [ ['shot01','shot02','shot03','shot04'], 20, 20 ]
+});
+
+// Removing sound effects
+sounds.remove('wily');
+</pre>
+
+			<div class="block clearfix">
+				<h3>Simple link hover effects</h3>
+<pre class="prettyprint lang-js">
+$('#hover').on('mouseenter mouseleave', function(event){
+
+	sounds.play( event.type === 'mouseenter' ? 'mouseover' : 'mouseout' );
+
+});
+</pre>
+			</div>
+			<div class="block clearfix">
+				<h3>Weapon fire from 4 audio files</h3>
+<pre class="prettyprint lang-js">
+$('#fire').on('click', function(event){
+
+	// Play 10 shots 100 milliseconds after each other
+	for( var i = 0; i &lt; 10; i++ ){
+
+		setTimeout( function(){
+
+			// Choose the sound layer randomly
+			sounds.play('fire', true);
+
+		}, i * 100 );
+
+	}
+
+});
+</pre>
+			</div>
+			<div class="block clearfix">
+				<h3>All SFX playback methods</h3>
+<pre class="prettyprint lang-js">
+// Play music
+sounds.play('music');
+
+// Play shot but choose random available sound layer
+sounds.play('shot', true);
+
+// Loop music
+sounds.loop('music');
+
+// Pause music
+sounds.pause('music');
+
+// Stop music
+sounds.stop('music');
+
+// Change volume of music
+sounds.volume('music', 50);
+
+// Change volume of all sound effects in 'sounds' SFX instance
+sounds.volume(50);
+
+// Mute music
+sounds.mute('music');
+
+// Unmute music
+sounds.mute('music', false);
+
+// Mute all sound effects in 'sounds' SFX instance
+sounds.mute();
+
+// Unmute all sound effects in 'sounds' SFX instance
+sounds.mute(false);
+</pre>
+			</div>
+
+
+		</div>
+
+	</div>
+
+	<div id="footer">
+		<div class="container">
+			<span class="fright"><a href="#top">Back to top &uarr;</a></span>
+			<p>Licensed under the <a href="http://www.opensource.org/licenses/MIT">MIT license</a>.</p>
+		</div>
+	</div>
+
+	<a href="http://github.com/Darsain/sfx.js"><img style="position:absolute;top:0;left:0;border:0;" src="https://a248.e.akamai.net/assets.github.com/img/bec6c51521dcc8148146135149fe06a9cc737577/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+
+	<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.7.2.min.js"><\/script>')</script>
+
+	<!-- scripts -->
+	<script src="sfx.js"></script>
+	<script src="js/plugins.js"></script>
+	<script src="js/main.js"></script>
+	<!-- end scripts -->
+</body>
+</html>
