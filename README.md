@@ -10,11 +10,12 @@ If browser support for OGG files will be ubiquitous, I'd like to drop support fo
 
 SFX works in Chrome, Opera, Firefox, Safari (with issues), and IE9+ (haven't tested other browsers). Supported file types are:
 
-Chrome: **OGG** + **MP3**
-Opera: **OGG**
-Firefox: **OGG**
-Safari: **MP3**
-IE9: **MP3**
++ Chrome: **OGG** + **MP3**
++ Opera: **OGG**
++ Firefox: **OGG**
++ Safari: **MP3**
++ IE9: **MP3**
+
 
 
 ## Creating an SFX instance
@@ -50,7 +51,7 @@ you'll be just greeted with silent website, but no errors.
 ## Methods
 
 
-#### add
+### add
 
 ```js
 soundGroup.add( soundName, file [, volume [, layers ] ] );
@@ -91,7 +92,7 @@ sounds.add({
 ```
 
 
-#### remove
+### remove
 
 ```js
 soundGroup.remove( soundName );
@@ -102,7 +103,7 @@ Remove sound effect from the `soundGroup` SFX instance.
 **soundName:** `String` name of a sound
 
 
-#### play
+### play
 
 ```js
 soundGroup.play( soundName, random );
@@ -114,7 +115,7 @@ Play sound effect from the `soundGroup` SFX instance.
 **random:** `String` whether the cycling through different sound layers should be random - creates a more natural sounding effects consisting of alternative versions of one sound effect
 
 
-#### loop
+### loop
 
 ```js
 soundGroup.loop( soundName, random );
@@ -124,7 +125,7 @@ Same behavior as `play` method, but after the sound has finished, it will start 
 Good for background music.
 
 
-#### pause
+### pause
 
 ```js
 soundGroup.pause( soundName );
@@ -135,7 +136,7 @@ Pauses a sound from the `soundGroup` SFX instance.
 **soundName:** `String` name of a sound to be paused
 
 
-#### stop
+### stop
 
 ```js
 soundGroup.stop( soundName );
@@ -146,7 +147,7 @@ Stops a sound from the `soundGroup` SFX instance.
 **soundName:** `String` name of a sound to be paused
 
 
-#### volume
+### volume
 
 ```js
 soundGroup.volume( [ soundName, ] volume );
@@ -158,7 +159,7 @@ Sets a volume for a specific sound, or all sounds in the `soundGroup` SFX instan
 **volume:** `Int` sound volume in 0-100 range
 
 
-#### mute
+### mute
 
 ```js
 soundGroup.volume( [ soundName, ] [ mute ] );
@@ -185,4 +186,4 @@ soundGroup.mute( 'shot', false ) // unmutes 'shot' sound in soundGroup
 ## Known issues
 
 + Safari's audio implementation is god damn slow and unresponsive.
-+ Looping of seamlessly designed sound effects is not seamless in most of the browsers. The jump between plays has a noticeable few milliseconds of quiet.
++ Looping of seamlessly designed sound effects is not seamless in most of the browsers. The jump between plays has a noticeable few milliseconds of silence.
