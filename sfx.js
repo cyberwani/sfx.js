@@ -152,9 +152,6 @@ window.SFX = function( directory, forceType ){
 		// Enable looping on all sName layers
 		setProp( sName, 'loop', true );
 
-		// Reset duration to fix the silent audio bug in google chrome
-		setProp( sName, 'currentTime', 0 );
-
 		// Play sound effect
 		self.play( sName, random );
 
