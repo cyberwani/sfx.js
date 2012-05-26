@@ -14,49 +14,6 @@ sounds.add({
 
 jQuery(function($){
 
-	// Trigger prettyPrint
-	prettyPrint();
-
-	// -----------------------------------------------------------------------------------
-	//   Page scripts
-	// -----------------------------------------------------------------------------------
-
-	var $tabs = $('#tabs').find('li'),
-		$container = $('#sections'),
-		$sections = $container.children(),
-		hashId = window.location.hash.replace(/^#tab=/, ''),
-		initial = hashId && $sections.filter('#'+hashId).length ? hashId : $tabs.eq(0).data('activate'),
-		activeClass = 'active',
-		hiddenClass = 'hidden';
-
-	// Tabs navigation
-	$tabs.on('click', function(e){
-
-		activate( $(this).data('activate') );
-
-		e.preventDefault();
-
-	});
-
-	// Back to top button
-	$('a[href="#top"]').on('click', function(e){
-		e.preventDefault();
-		$(document).scrollTop(0);
-	});
-
-	// Activate section
-	function activate( sectionId, noHashChange ){
-
-		if( !noHashChange ) window.location.hash = 'tab='+sectionId;
-		$tabs.removeClass(activeClass).filter('[data-activate='+sectionId+']').addClass(activeClass);
-		$sections.addClass(hiddenClass).filter('#'+sectionId).removeClass(hiddenClass);
-
-	}
-
-	// Activate initial section
-	activate( initial, 1 );
-
-
 	// -----------------------------------------------------------------------------------
 	//   Examples
 	// -----------------------------------------------------------------------------------
@@ -64,7 +21,7 @@ jQuery(function($){
 	var $examples = $('#examples');
 
 	// Hover farts
-	$('#hover').on('mouseenter mouseleave', function(event){
+	$('#fart').on('mouseenter mouseleave', function(event){
 
 		sounds.play( event.type === 'mouseenter' ? 'mouseover' : 'mouseout' );
 
@@ -123,5 +80,53 @@ jQuery(function($){
 		}
 
 	});
+
+
+	// -----------------------------------------------------------------------------------
+	//   Page navigation
+	// -----------------------------------------------------------------------------------
+
+	// Navigation
+	var $nav = $('#nav'),
+		$sections = $('#sections').children(),
+		activeClass = 'active';
+
+	// Tabs
+	$nav.on('click', 'a', function(e){
+		e.preventDefault();
+		activate( $(this).attr('href').substr(1) );
+	});
+
+	// Back to top button
+	$('a[href="#top"]').on('click', function(e){
+		e.preventDefault();
+		$(document).scrollTop(0);
+	});
+
+	// Activate a section
+	function activate( sectionID, initial ){
+
+		sectionID = sectionID && $sections.filter('#'+sectionID).length ? sectionID : $sections.eq(0).attr('id');
+		$nav.find('a').removeClass(activeClass).filter('[href=#'+sectionID+']').addClass(activeClass);
+		$sections.hide().filter('#'+sectionID).show();
+
+		if( !initial ){
+			window.location.hash = '!' + sectionID;
+		}
+
+		$(document).trigger('activated', [ sectionID ] );
+
+	}
+
+	// Activate initial section
+	activate( window.location.hash.match(/^#!/) ? window.location.hash.substr(2) : 0, 1 );
+
+
+	// -----------------------------------------------------------------------------------
+	//   Additional plugins
+	// -----------------------------------------------------------------------------------
+
+	// Trigger prettyPrint
+	prettyPrint();
 
 });
