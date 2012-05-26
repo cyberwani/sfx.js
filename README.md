@@ -1,8 +1,8 @@
 # SFX.js
 
-Simple and small audio wrapper for easy sound effects on your website. SFX.js plays OGG files when browser supports them, and falls back to MP3 otherwise.
+Simple audio wrapper for easy sound effects on your website. SFX.js plays OGG files when browser supports them, and falls back to MP3 otherwise.
 OGG is prioritized because it is an open format with developer friendly licensing, unlike MP3...
-If browser support for OGG files will be ubiquitous, I'd like to drop support for MP3 in SFX.js altogether.
+If a browser support for OGG files will be ubiquitous, I'd like to drop support for MP3 in SFX.js.
 
 [See the DEMO](http://darsain.github.com/sfx.js)
 
@@ -21,7 +21,7 @@ SFX works in Chrome, Opera, Firefox, Safari (with issues), and IE9+ (haven't tes
 ## Creating an SFX instance
 
 ```js
-var soundGroup = new SFX( directory, [ forceType ] );
+var sfxObject = new SFX( directory, [ forceType ] );
 ```
 
 ### directory
@@ -32,7 +32,7 @@ you can use `{{type}}` keyword in your directory path, which will than be replac
 For example:
 
 ```js
-var soundGroup = new SFX( 'sound_effects/{{type}}' );
+var sfxObject = new SFX( 'sound_effects/{{type}}' );
 ```
 
 The paths of queried files will than look like `sound_effects/ogg/file.ogg`, or `sound_effects/mp3/file.mp3` depending on a browser support.
@@ -40,7 +40,7 @@ The paths of queried files will than look like `sound_effects/ogg/file.ogg`, or 
 
 ### [ forceType ]
 
-If you don't want SFX.js to look for a different types of files based on a current browser support, or you are just too lazy with providing one file in two different versions,
+If you don't want SFX.js to look for a different types of files based on a current browser support, or you are just too lazy to provide one file in two different versions,
 you can use this argument to force only certain type of files to be queried and played. In a browsers that doesn't support this type of file,
 you'll be just greeted with silent website, but no errors.
 
@@ -54,13 +54,13 @@ you'll be just greeted with silent website, but no errors.
 ### add
 
 ```js
-soundGroup.add( soundName, file [, volume [, layers ] ] );
+sfxObject.add( soundName, file [, volume [, layers ] ] );
 ```
 
-Adds a new sound effect to the `soundGroup` SFX instance.
+Adds a new sound effect to the `sfxObject` SFX instance.
 
 + **soundName:** `String` simple string with a name of a sound
-+ **file:** `String|Array` name of a file (or array with filenames) located in `soundGroup` directory without an extensions, as that is decided according to the browser support
++ **file:** `String|Array` name of a file (or array with filenames) located in `sfxObject` directory without an extensions, as that is added according to the browser support
 + **volume:** `Int` default sound volume for this sound effect in 0-100 range (default is 100)
 + **layers:** `In` how many audio layers should be created from this file(s)
 
@@ -78,7 +78,7 @@ Passing 4 file names automatically creates 4 sound layers, but you can still use
 You can also pass a map of effects with a key being soundName and a value either string with file name, or an array with the other 3 arguments. Example:
 
 ```js
-sounds.add({
+sfxObject.add({
 	music: 'wily',
 	loop:  'fire',
 	mouseover: [ 'fart', 30 ],
@@ -95,10 +95,10 @@ sounds.add({
 ### remove
 
 ```js
-soundGroup.remove( soundName );
+sfxObject.remove( soundName );
 ```
 
-Remove sound effect from the `soundGroup` SFX instance.
+Remove sound effect from the `sfxObject` SFX instance.
 
 + **soundName:** `String` name of a sound
 
@@ -106,10 +106,10 @@ Remove sound effect from the `soundGroup` SFX instance.
 ### play
 
 ```js
-soundGroup.play( soundName, random );
+sfxObject.play( soundName [, random ] );
 ```
 
-Play sound effect from the `soundGroup` SFX instance.
+Play a sound effect.
 
 + **soundName:** `String` name of a sound
 + **random:** `String` whether the cycling through different sound layers should be random - creates a more natural sounding effects
@@ -118,7 +118,7 @@ Play sound effect from the `soundGroup` SFX instance.
 ### loop
 
 ```js
-soundGroup.loop( soundName, random );
+sfxObject.loop( soundName [, random ] );
 ```
 
 Same behavior as `play` method, but after the sound has finished, it will start playing again in an infinite loop untill the `pause` or `stop` method is called.
@@ -128,21 +128,33 @@ Good for background music.
 ### pause
 
 ```js
-soundGroup.pause( soundName );
+sfxObject.pause( soundName );
 ```
 
-Pauses a sound from the `soundGroup` SFX instance.
+Pause a sound effect.
 
 + **soundName:** `String` name of a sound to be paused
+
+
+### toggle
+
+```js
+sfxObject.toggle( soundName [, random ] );
+```
+
+Play when paused, pause when playing a sound effect.
+
++ **soundName:** `String` name of a sound
++ **random:** `String` same function as in **play** method - does nothing when pausing an effect
 
 
 ### stop
 
 ```js
-soundGroup.stop( soundName );
+sfxObject.stop( soundName );
 ```
 
-Stops a sound from the `soundGroup` SFX instance.
+Stops a sound.
 
 + **soundName:** `String` name of a sound to be paused
 
@@ -150,10 +162,10 @@ Stops a sound from the `soundGroup` SFX instance.
 ### volume
 
 ```js
-soundGroup.volume( [ soundName, ] volume );
+sfxObject.volume( [ soundName, ] volume );
 ```
 
-Sets master volume, or a volume for a specific sound in the `soundGroup` SFX object.
+Sets the master volume, or a volume for a specific sound.
 
 + **soundName:** `String` name of a sound - omit this argument to set master volume
 + **volume:** `Int` sound volume in 0-100 range
@@ -165,10 +177,10 @@ For example: master volume `50`, and sound effect volume `50` creates effective 
 ### mute
 
 ```js
-soundGroup.volume( [ soundName, ] [ mute ] );
+sfxObject.volume( [ soundName, ] [ mute ] );
 ```
 
-Mute or unmute a specific sound, or all sounds in the `soundGroup` SFX instance. All `play` and `loop` calls on this file(s) will result in silence.
+Mute or unmute a specific sound, or all sounds in the `sfxObject` SFX instance. All `play` calls on this file(s) will than result in silence.
 
 + **soundName:** `String` name of a sound
 + **mute:** `Bool` boolean value of mute status (default is true)
@@ -176,10 +188,10 @@ Mute or unmute a specific sound, or all sounds in the `soundGroup` SFX instance.
 Examples:
 
 ```js
-soundGroup.mute();        // mutes all sounds in soundGroup
-soundGroup.mute( false )  // unmutes all sounds in soundGroup
-soundGroup.mute( 'shot' ) // mutes 'shot' sound in soundGroup
-soundGroup.mute( 'shot', false ) // unmutes 'shot' sound in soundGroup
+sfxObject.mute();        // mutes all sounds in soundGroup
+sfxObject.mute( false )  // unmutes all sounds in soundGroup
+sfxObject.mute( 'shot' ) // mutes 'shot' sound in soundGroup
+sfxObject.mute( 'shot', false ) // unmutes 'shot' sound in soundGroup
 ```
 
 

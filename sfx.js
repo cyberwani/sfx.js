@@ -1,5 +1,5 @@
 /*!
- * SFX v0.9.1
+ * SFX v0.9.2
  * https://github.com/Darsain/sfx.js
  *
  * Licensed under the MIT license.
@@ -184,6 +184,44 @@ window.SFX = function( directory, forceType ){
 				sfx[sName][i].currentTime = 0;
 
 			}
+
+		}
+
+	};
+
+
+	/**
+	 * Toggle sound effect, i.e. pause when playing, play when paused
+	 *
+	 * @public
+	 *
+	 * @param  {String} sName Effect name
+	 * @param  {Random} random Randomize selection of a file that is going to be played
+	 */
+	self.toggle = function( sName, random ){
+
+		if( !support || !sfx[sName] ) return;
+
+		var isPlaying = 0;
+
+		// Find if there is any playing layer
+		for( var i = 0; i < sfx[sName].length; i++ ){
+
+			if( !sfx[sName][i].paused ){
+
+				isPlaying++;
+
+			}
+
+		}
+
+		if( isPlaying ){
+
+			self.pause( sName );
+
+		} else {
+
+			self.play( sName, random );
 
 		}
 

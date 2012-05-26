@@ -48,6 +48,13 @@ jQuery(function($){
 
 	});
 
+	// Toggle
+	$examples.on('click', '[data-toggle]', function(event){
+
+		sounds.toggle( $(this).data('toggle') );
+
+	});
+
 	// Stop
 	$examples.on('click', '[data-stop]', function(event){
 
