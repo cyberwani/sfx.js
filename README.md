@@ -41,7 +41,7 @@ The paths of queried files will than look like `sound_effects/ogg/file.ogg`, or 
 ### [ forceType ]
 
 If you don't want SFX.js to look for a different types of files based on a current browser support, or you are just too lazy with providing one file in two different versions,
-you can use this argument to force only certain type of files to be queried and played. In a browsers that don't support this type of file,
+you can use this argument to force only certain type of files to be queried and played. In a browsers that doesn't support this type of file,
 you'll be just greeted with silent website, but no errors.
 
 
@@ -59,19 +59,19 @@ soundGroup.add( soundName, file [, volume [, layers ] ] );
 
 Adds a new sound effect to the `soundGroup` SFX instance.
 
-**soundName:** `String` simple string with a name of a sound
-**file:** `String|Array` name of a file (or array with filenames) located in `soundGroup` directory without an extensions, as that is decided according to the browser support
-**volume:** `Int` default sound volume for this sound effect in 0-100 range (default is 100)
-**layers:** `In` how many audio layers should be created from this file(s)
++ **soundName:** `String` simple string with a name of a sound
++ **file:** `String|Array` name of a file (or array with filenames) located in `soundGroup` directory without an extensions, as that is decided according to the browser support
++ **volume:** `Int` default sound volume for this sound effect in 0-100 range (default is 100)
++ **layers:** `In` how many audio layers should be created from this file(s)
 
 When you'll pass an array of file names into **file** argument, they will be used to create multiple sound layers. Layers are than useful when simultaneous playback is required.
 
-For example: You have a sound for a gunshot, but you want to play it before the last one has ended (fast rate of gun fire). In this case, you have to use more layers,
+For example: You have a sound for a gunshot, but you want to play it before the last one has ended (fast rate of fire). In this case, you have to use more layers,
 as one Audio() element cannot be played multiple times simultaneously. SFX.js than cycles through this layers, playing them one after another.
 You should set how many layers do you need based on a probability of sound overlapping and length of a sound effect. With higher layer count
 you are lowering the probability of silence due to no sound layers being available, but also consuming more resources.
 
-Providing multiple versions of a same sound effect (passing them as array of file names into **file** argument) creates more natural result for sound effects such as gun fire.
+Providing multiple versions of a same sound effect (passing them as an array of file names into **file** argument) creates more natural result for sound effects such as gun fire.
 
 Passing 4 file names automatically creates 4 sound layers, but you can still use **layers** argument to create more.
 
@@ -100,7 +100,7 @@ soundGroup.remove( soundName );
 
 Remove sound effect from the `soundGroup` SFX instance.
 
-**soundName:** `String` name of a sound
++ **soundName:** `String` name of a sound
 
 
 ### play
@@ -111,8 +111,8 @@ soundGroup.play( soundName, random );
 
 Play sound effect from the `soundGroup` SFX instance.
 
-**soundName:** `String` name of a sound
-**random:** `String` whether the cycling through different sound layers should be random - creates a more natural sounding effects consisting of alternative versions of one sound effect
++ **soundName:** `String` name of a sound
++ **random:** `String` whether the cycling through different sound layers should be random - creates a more natural sounding effects
 
 
 ### loop
@@ -133,7 +133,7 @@ soundGroup.pause( soundName );
 
 Pauses a sound from the `soundGroup` SFX instance.
 
-**soundName:** `String` name of a sound to be paused
++ **soundName:** `String` name of a sound to be paused
 
 
 ### stop
@@ -144,7 +144,7 @@ soundGroup.stop( soundName );
 
 Stops a sound from the `soundGroup` SFX instance.
 
-**soundName:** `String` name of a sound to be paused
++ **soundName:** `String` name of a sound to be paused
 
 
 ### volume
@@ -153,10 +153,13 @@ Stops a sound from the `soundGroup` SFX instance.
 soundGroup.volume( [ soundName, ] volume );
 ```
 
-Sets a volume for a specific sound, or all sounds in the `soundGroup` SFX instance.
+Sets master volume, or a volume for a specific sound in the `soundGroup` SFX object.
 
-**soundName:** `String` name of a sound
-**volume:** `Int` sound volume in 0-100 range
++ **soundName:** `String` name of a sound - omit this argument to set master volume
++ **volume:** `Int` sound volume in 0-100 range
+
+Master volume affects all sound effects, as their effective volume is calculated as a percentage of a master volume.
+For example: master volume `50`, and sound effect volume `50` creates effective volume of `25`.
 
 
 ### mute
@@ -167,8 +170,8 @@ soundGroup.volume( [ soundName, ] [ mute ] );
 
 Mute or unmute a specific sound, or all sounds in the `soundGroup` SFX instance. All `play` and `loop` calls on this file(s) will result in silence.
 
-**soundName:** `String` name of a sound
-**mute:** `Bool` boolean value of mute status (default is true)
++ **soundName:** `String` name of a sound
++ **mute:** `Bool` boolean value of mute status (default is true)
 
 Examples:
 
