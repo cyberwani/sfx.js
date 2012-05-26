@@ -1,5 +1,5 @@
 /*!
- * SFX v0.9.0
+ * SFX v0.9.1
  * https://github.com/Darsain/sfx.js
  *
  * Licensed under the MIT license.
@@ -14,7 +14,7 @@ window.SFX = function( directory, forceType ){
 		support = false,
 		dir = '',
 		type = 'ogg',
-		globalVolume = 1,
+		masterVolume = 100,
 		globalMute = false;
 
 
@@ -46,7 +46,7 @@ window.SFX = function( directory, forceType ){
 
 		var files = isArray( file ) ? file : [file],
 			paths = [],
-			layers = layers > files.length ? layers : files.length;;
+			layers = layers > files.length ? layers : files.length;
 
 		// Extend filenames into valid paths
 		for( var f = 0; f < files.length; f++ ){
@@ -65,7 +65,7 @@ window.SFX = function( directory, forceType ){
 
 			var audio = new Audio( paths[ i % paths.length ] );
 
-			audio.volume = isNumber( volume ) ? volume / 100 : globalVolume;
+			audio.volume = ( isNumber( volume ) ? masterVolume / 100 * volume : masterVolume ) / 100;
 
 			sfx[sName].push( audio );
 
@@ -205,47 +205,44 @@ window.SFX = function( directory, forceType ){
 
 
 	/**
-	 * Set global or effect specific sound volume
+	 * Set master volume, or volume for a specific sound effect
 	 *
 	 * @public
 	 *
-	 * @param  {Mixed} sName  Effect name, or straight integer [0-100] to set global volume
+	 * @param  {Mixed} sName  Effect name, or straight integer [0-100] omit this argument when setting master volume
 	 * @param  {Int}   volume Volume from 0 to 100
 	 *
 	 * @example
 	 *  sfxObject.volume( 'bgmusic', 50 ) => sets volume to 50% for 'bgmusic' sound effect
-	 *  sfxObject.volume( 50 )            => sets volume to 50% for all sound effects in sfxObject
+	 *  sfxObject.volume( 50 )            => sets master volume to 50%
 	 */
 	self.volume = function( sName, volume ){
 
 		if( !support ) return;
 
-		volume = ( isNumber( sName ) ? sName : volume ) / 100;
+		volume = typeof sName === 'string' ? volume : sName;
 		sName = typeof sName === 'string' ? sName : false;
 
+		if( !isNumber( volume ) || volume < 0 || volume > 100 ) return;
+
+		// Specific sound effect
 		if( sName ){
 
-			// If specified, modify volume only for one sound effect
-			setProp( sName, 'volume', volume );
+			setProp( sName, 'volume', ( masterVolume / 100 * volume ) / 100 );
 
-			if( !!volume ){
-
-				sfx[sName].muted = 1;
-
-			}
-
+		// Master volume
 		} else {
 
-			// Modify global volume
+			masterVolume = volume;
+
+			// Update volumes
 			for( var key in sfx ){
 
-				setProp( key, 'volume', volume );
+				var currVolume = sfx[key][0].volume / 1;
+
+				setProp( key, 'volume', masterVolume / 100 * currVolume );
 
 			}
-
-			globalVolume = volume;
-
-			globalMute = !volume;
 
 		}
 
@@ -257,8 +254,14 @@ window.SFX = function( directory, forceType ){
 	 *
 	 * @public
 	 *
-	 * @param {String} sName Effect name to be removed
+	 * @param {String} sName Effect to be muted (omit this value to mute every sound in current SFX object)
 	 * @param {Bool}   mute  Pass false to disable mute
+	 *
+	 * @example
+	 *  sfxObject.mute( 'bgmusic' )        => mute 'bgmusic' sound effect
+	 *  sfxObject.mute( 'bgmusic', false ) => unmute 'bgmusic' sound effect
+	 *  sfxObject.mute()                   => mute all sound effects
+	 *  sfxObject.mute( false )            => unmute all sound effects
 	 */
 	self.mute = function( sName, mute ){
 
